@@ -9,6 +9,7 @@ public class Control {
 
     // =========================== Class Variables ===========================79
     // =============================  Variables  =============================79
+
     private ArrayList<Document> docList;
     private ArrayList<Tag> tagList;
     private ArrayList<Document> tempDocList;
@@ -16,6 +17,7 @@ public class Control {
 
     // ============================  Constructors  ===========================79
     // ===========================  public  Methods  =========================79
+
     public void search(String inputString) {
 
     }

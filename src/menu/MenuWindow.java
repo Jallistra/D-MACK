@@ -7,16 +7,19 @@ public class MenuWindow {
 
     // =========================== Class Variables ===========================79
     // =============================  Variables  =============================79
+
     String titel;
     String[] auswahl;
 
     // ============================  Constructors  ===========================79
+
     public MenuWindow(String titel, String[] auswahl) {
         this.titel = titel;
         this.auswahl = auswahl;
     }
 
     // ===========================  public  Methods  =========================79
+
     public String getTitel() {
         return titel;
     }
