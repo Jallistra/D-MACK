@@ -16,7 +16,7 @@ public class HashSetTest {
         HashSet hs = new HashSet();
 
         // add elements to the hash set
-        hs.add("B");
+       // hs.add("B");
         hs.add("A");
         hs.add("D");
         hs.add("E");
