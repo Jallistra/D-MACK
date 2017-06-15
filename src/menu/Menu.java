@@ -10,6 +10,7 @@ public class Menu {
 
     // =========================== Class Variables ===========================79
     // =============================  Variables  =============================79
+
     private ArrayList<MenuWindow> windowList = new ArrayList<MenuWindow>();
     private ArrayList<MenuAction> actionListe = new ArrayList<MenuAction>();
     private boolean finished = false;
@@ -20,6 +21,7 @@ public class Menu {
 
     // ============================  Constructors  ===========================79
     // ===========================  public  Methods  =========================79
+
     // Fügt der ArrayList ein MenüFenster-Objekt hinzu
     public void add(MenuWindow fenster) {
         windowList.add(fenster);
@@ -41,6 +43,7 @@ public class Menu {
 
     // =================  protected/package local  Methods ===================79
     // ===========================  private  Methods  ========================79
+
     // Enthält die Logik der Navigation durch die Konsole
     private void navigation() {
         Scanner scan = new Scanner(System.in);
