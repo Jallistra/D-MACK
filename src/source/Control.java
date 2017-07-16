@@ -1,9 +1,6 @@
 package source;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.*;
 
 /**
  * Created by cceti on 31.05.2017.
@@ -12,14 +9,15 @@ public class Control {
 
     // =========================== Class Variables ===========================79
     private static final Control instance = new Control();
-    private ArrayList<Document> docList = new ArrayList<Document>();
-    private HashSet<Tag> tagSet = new HashSet<Tag>();
-    private ArrayList<Document> tempDocList = new ArrayList<Document>();
-    private HashSet<Tag> tempTagSet = new HashSet<Tag>();
+
 
     // =============================  Variables  =============================79
 
+    private List<Document> docList = new ArrayList<>();
+    private Set<Tag> tagSet = new HashSet<>();
+
     // ============================  Constructors  ===========================79
+    //Singleton - deshalb 
     private Control() {
 
     }
@@ -33,25 +31,18 @@ public class Control {
         docList.add(new Document(inputDocName, inputDocPath));
     }
 
-    public void createTag(String inputTagName) {
-        tagSet.add(new Tag(inputTagName));
+    /**
+     * 
+     * @param inputTagName new tag name
+     * @return false, if tag already exits. True otherwise
+     */
+    public boolean createTag(String inputTagName) {
+        return tagSet.add(new Tag(inputTagName));
     }
 
-    //todo addTag und addDoc sollen immer zusammen ausgeführt werden, da Zuweisung in beide Richtungen erfolgt
-    //todo multiple Zuweisung vielleicht durch for-Schleife mit der Länge der Anzahl von Docs oder Tags, die zugewiesen werden sollen
-    //todo einem Dokument ein Tag hinzufügen, Attribute ergänzen
-    public void addTag(Document document, Tag tag) {
-        document.getAssignedTagSet().add(tag);
-    }
-
-    //todo einem Tag ein Dokument hinzufügen, Attribute ergänzen
-    public void addDoc(Tag tag, Document document) {
-        tag.getAssignedDocList().add(document);
-    }
-
-
-    public void searchDoc(String inputString) {
-        for (int i=0; i<docList.size();i++) {
+    public List<Document> searchDoc(String inputString) {
+        List<Document> tempDocList = new ArrayList<>(docList.size());
+        for (int i=0; i < docList.size();i++) {
             if (docList.get(i).getDocName().contains(inputString)) {
                 tempDocList.add(docList.get(i));
             }
@@ -60,27 +51,26 @@ public class Control {
         for (Document aTempDocList : tempDocList) {
             System.out.println(aTempDocList.getDocName());
         }
-        //todo falls mit tempDocList weitergearbeitet wird, sollte hier nicht gecleart werden, sondern am/an jeweiligen ende/enden
-        tempDocList.clear();
+        return tempDocList;
     }
 
-    public void searchTag(String inputString) {
-        Iterator it = tagSet.iterator();
+    public List<Tag> searchTag(String inputString) {
+        List<Tag> tempTagList = new ArrayList<>(tagSet.size());
+        Iterator<Tag> it = tagSet.iterator();
         while(it.hasNext()) {
-            if (it.next().toString().contains(inputString)) {
-                System.out.println(it.toString());
+            Tag tag = it.next();
+            if (tag.toString().contains(inputString)) {
+                tempTagList.add(tag);
+                System.out.println(tag.toString());
             }
         }
+        return tempTagList;
     }
 
     //todo auf GUI einstellen
-    public void outputContainedDoc(Tag tag) {
-        if(tagSet.contains(tag)) {
-            for (int i = 0; i < tag.getAssignedDocList().size(); i++) {
-                System.out.println(tag.getAssignedDocList().get(i).getDocName());
-            }
-        } else {
-            System.out.println("Tag ist nicht im System angelegt!");
+    public void outputContainsDoc(Tag tag) {
+        for (int i = 0; i < tag.getAssignedDocList().size(); i++) {
+            System.out.println(tag.getAssignedDocList().get(i).getDocName());
         }
     }
 
@@ -106,54 +96,48 @@ public class Control {
         document.setDocPath(inputString);
     }
 
-    public void adjustTagName(Tag tag, String inputString) {
+    // TODO: Joe 16.07.2017 Testen
+    public boolean adjustTagName(Tag tag, String inputString) {
+        tagSet.remove(tag);
+        String oldTagName = tag.getTagName();
         tag.setTagName(inputString);
-    }
-
-    //todo Methode bereits vorhanden (addTag)
-    //todo Attribute müssen noch angepasst werden, Set bzw. Liste mit ausgewählten Tags müssen mit übergeben werden
-    // todo Vorschlag von IntelliJ anstelle von "while" "foreach", wird dabei vorhandenes Set des Dokuments ersetzt?
-    public void addTagToDocument(Document document, HashSet<Tag> selectedTagSet) {
-        Iterator<Tag> it = selectedTagSet.iterator();
-        while(it.hasNext()) {
-            document.getAssignedTagSet().add(it.next());
+        if (!tagSet.add(tag)) {
+            tag.setTagName(oldTagName);
+            tagSet.add(tag);
+            return false;
         }
-//todo Vorschlag von IntelliJ, kann mich nicht ganz an die eigentliche "while"-Schleife erinnern
-//        for (Object aSelectedTagSet : selectedTagSet) {
-//            document.getAssignedTagSet().add((Tag) aSelectedTagSet);
-//        }
+        return true;
     }
 
-    public ArrayList<Document> getDocList() {
+    // TODO: Joe 16.07.2017 in addTagToDocument und addDoc überprüfen, ob Tag bzw. Doc bereits vorhanden sind
+    //todo addTagToDocument und addDoc sollen immer zusammen ausgeführt werden, da Zuweisung in beide Richtungen erfolgt
+    //todo einem Dokument ein Tag hinzufügen, Attribute ergänzen
+    //todo Attribute müssen noch angepasst werden, Set bzw. Liste mit ausgewählten Tags müssen mit übergeben werden
+    public void addTagToDocument(Document document, Set<Tag> selectedTagSet) {
+        for (Tag aSelectedTagSet : selectedTagSet) {
+            document.getAssignedTagList().add(aSelectedTagSet);
+        }
+    }
+
+    //todo einem Tag ein Dokument hinzufügen, Attribute ergänzen
+    public void addDoc(Tag tag, Document document) {
+        tag.getAssignedDocList().add(document);
+    }
+
+    public List<Document> getDocList() {
         return docList;
     }
 
-    public HashSet<Tag> getTagSet() {
+    public Set<Tag> getTagSet() {
         return tagSet;
     }
 
-    public ArrayList<Document> getTempDocList() {
-        return tempDocList;
-    }
-
-    public HashSet<Tag> getTempTagSet() {
-        return tempTagSet;
-    }
-
-    public void setDocList(ArrayList<Document> docList) {
+    public void setDocList(List<Document> docList) {
         this.docList = docList;
     }
 
-    public void setTagSet(HashSet<Tag> tagSet) {
+    public void setTagSet(Set<Tag> tagSet) {
         this.tagSet = tagSet;
-    }
-
-    public void setTempDocList(ArrayList<Document> tempDocList) {
-        this.tempDocList = tempDocList;
-    }
-
-    public void setTempTagSet(HashSet<Tag> tempTagSet) {
-        this.tempTagSet = tempTagSet;
     }
 
     // =================  protected/package local  Methods ===================79

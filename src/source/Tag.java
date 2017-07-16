@@ -8,8 +8,6 @@ import java.util.ArrayList;
 public class Tag {
 
     // =========================== Class Variables ===========================79
-    private static int idCount = 0;
-    private final int id;
     private String tagName;
     private ArrayList<Document> assignedDocList = new ArrayList<Document>();
 
@@ -17,7 +15,6 @@ public class Tag {
     // ============================  Constructors  ===========================79
 
     public Tag(String tagName) {
-        this.id = idCount++;
         this.tagName = tagName;
     }
 
@@ -46,12 +43,12 @@ public class Tag {
 
         Tag tag = (Tag) o;
 
-        return id == tag.id;
+        return tagName.equalsIgnoreCase(tag.getTagName());
     }
 
     @Override
     public int hashCode() {
-        return id;
+        return tagName.toLowerCase().hashCode();
     }
 
     // =================  protected/package local  Methods ===================79

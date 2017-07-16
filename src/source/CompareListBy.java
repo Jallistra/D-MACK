@@ -27,7 +27,7 @@ public class CompareListBy implements Comparator<Object> {
             Date d1 = (Date) m1.invoke(o1);
             Class c2 = o2.getClass();
             Method m2 = c2.getMethod(s);
-            Date d2 = (Date) m1.invoke(o2);
+            Date d2 = (Date) m2.invoke(o2);
             return d1.compareTo(d2);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();

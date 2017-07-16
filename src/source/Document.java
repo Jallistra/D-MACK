@@ -3,8 +3,7 @@ package source;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.List;
 
 /**
  * Created by cceti on 30.05.2017.
@@ -15,7 +14,7 @@ public class Document {
     // =============================  Variables  =============================79
     private String docName;
     private String docPath;
-    private HashSet<Tag> assignedTagSet;
+    private List<Tag> assignedTagList;
     private Date createdDate;
     private Date updatedDate;
 
@@ -32,6 +31,7 @@ public class Document {
 
     // ===========================  public  Methods  =========================79
 
+    // TODO: Joe 16.07.2017 Else hinzufügen, wenns nicht klappt
     //todo test mit scanner war erfolgreich, compiler wandelt die eingabe über intellij in richtige form um
     public void openDoc() throws IOException {
         if(Desktop.isDesktopSupported()) {
@@ -50,8 +50,8 @@ public class Document {
         return docPath;
     }
 
-    public HashSet<Tag> getAssignedTagSet() {
-        return assignedTagSet;
+    public List<Tag> getAssignedTagList() {
+        return assignedTagList;
     }
 
     public Date getCreatedDate() {
@@ -70,8 +70,8 @@ public class Document {
         this.docPath = docPath;
     }
 
-    public void setAssignedTagSet(HashSet<Tag> assignedTagSet) {
-        this.assignedTagSet = assignedTagSet;
+    public void setAssignedTagList(List<Tag> assignedTagList) {
+        this.assignedTagList = assignedTagList;
     }
 
     public void setCreatedDate(Date createdDate) {
