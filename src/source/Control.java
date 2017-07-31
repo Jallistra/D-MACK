@@ -8,16 +8,19 @@ import java.util.*;
 public class Control {
 
     // =========================== Class Variables ===========================79
-    private static final Control instance = new Control();
 
+    private static final Control instance = new Control();
 
     // =============================  Variables  =============================79
 
     private List<Document> docList = new ArrayList<>();
-    private Set<Tag> tagSet = new HashSet<>();
+    private List<Tag> tagList = new LinkedList<>();
+
+    // Liste mit allen angemeldeten Listenern (observer pattern)
+    private List<ModelChangeListener> listenerList = new ArrayList<>();
 
     // ============================  Constructors  ===========================79
-    //Singleton - deshalb 
+    //Singleton
     private Control() {
 
     }
@@ -27,65 +30,17 @@ public class Control {
         return instance;
     }
 
-    public void createDoc(String inputDocName, String inputDocPath) {
-        docList.add(new Document(inputDocName, inputDocPath));
+    public void createDoc(String inputDocName, String inputDocPath, List<Tag> tags) {
+        docList.add(new Document(inputDocName, inputDocPath, tags));
+        fireModelChanged();
     }
 
-    /**
-     * 
-     * @param inputTagName new tag name
-     * @return false, if tag already exits. True otherwise
-     */
-    public boolean createTag(String inputTagName) {
-        return tagSet.add(new Tag(inputTagName));
-    }
-
-    public List<Document> searchDoc(String inputString) {
-        List<Document> tempDocList = new ArrayList<>(docList.size());
-        for (int i=0; i < docList.size();i++) {
-            if (docList.get(i).getDocName().contains(inputString)) {
-                tempDocList.add(docList.get(i));
-            }
-        }
-        //todo auf GUI einstellen
-        for (Document aTempDocList : tempDocList) {
-            System.out.println(aTempDocList.getDocName());
-        }
-        return tempDocList;
-    }
-
-    public List<Tag> searchTag(String inputString) {
-        List<Tag> tempTagList = new ArrayList<>(tagSet.size());
-        Iterator<Tag> it = tagSet.iterator();
-        while(it.hasNext()) {
-            Tag tag = it.next();
-            if (tag.toString().contains(inputString)) {
-                tempTagList.add(tag);
-                System.out.println(tag.toString());
-            }
-        }
-        return tempTagList;
-    }
-
+    // TODO Joe: 16.07.2017 überlegen, ob gefilterte DocListe über GUI oder über Control verwaltet werden soll
     //todo auf GUI einstellen
     public void outputContainsDoc(Tag tag) {
         for (int i = 0; i < tag.getAssignedDocList().size(); i++) {
             System.out.println(tag.getAssignedDocList().get(i).getDocName());
         }
-    }
-
-    //todo sort nach selben Methode wie in Uebungsblatt 3, index und Ausgabe noch anpassen
-    public void sort(int index) {
-        if (index==0) {
-            Collections.sort(docList, new CompareListBy("getCreatedDate"));
-        }
-        if (index==1) {
-            Collections.sort(docList, new CompareListBy("getUpdatedDate"));
-        }
-        if(index==2) {
-            Collections.sort(docList, new CompareListBy("getDocName"));
-        }
-
     }
 
     public void adjustDocName(Document document, String inputString) {
@@ -96,16 +51,40 @@ public class Control {
         document.setDocPath(inputString);
     }
 
-    // TODO: Joe 16.07.2017 Testen
-    public boolean adjustTagName(Tag tag, String inputString) {
-        tagSet.remove(tag);
-        String oldTagName = tag.getTagName();
-        tag.setTagName(inputString);
-        if (!tagSet.add(tag)) {
-            tag.setTagName(oldTagName);
-            tagSet.add(tag);
+    public boolean addTag(Tag tag) {
+        if (tagList.contains(tag)) {
             return false;
         }
+        else {
+            tagList.add(tag);
+            fireModelChanged();
+            return true;
+        }
+    }
+
+    public void deleteTag(Tag tag) {
+        tagList.remove(tag);
+
+        for (Document document : docList) {
+            if (document.getAssignedTagList().contains(tag)) {
+                document.removeTag(tag);
+            }
+        }
+    }
+
+    public boolean renameTag(Tag tagToRename, String tagName) {
+        if (tagName.isEmpty() || tagToRename.getTagName().equals(tagName)) {
+            return false;
+        }
+        for (Tag tag : tagList) {
+            if (tagToRename == tag) {
+                continue;
+            }
+            if (tag.getTagName().equalsIgnoreCase(tagName)) {
+                return false;
+            }
+        }
+        tagToRename.setTagName(tagName);
         return true;
     }
 
@@ -119,29 +98,37 @@ public class Control {
         }
     }
 
+    // TODO Joe: 16.07.2017 multiple Zuweisung einfügen
     //todo einem Tag ein Dokument hinzufügen, Attribute ergänzen
     public void addDoc(Tag tag, Document document) {
         tag.getAssignedDocList().add(document);
     }
 
+    public List<Tag> getTagList() {
+        return Collections.unmodifiableList(tagList);
+    }
+
     public List<Document> getDocList() {
-        return docList;
+        return Collections.unmodifiableList(docList);
     }
 
-    public Set<Tag> getTagSet() {
-        return tagSet;
+    public void addListener(ModelChangeListener listener) {
+        listenerList.add(listener);
     }
 
-    public void setDocList(List<Document> docList) {
-        this.docList = docList;
-    }
-
-    public void setTagSet(Set<Tag> tagSet) {
-        this.tagSet = tagSet;
+    public void removeListener(ModelChangeListener listener) {
+        listenerList.remove(listener);
     }
 
     // =================  protected/package local  Methods ===================79
     // ===========================  private  Methods  ========================79
+// TODO Joe: 29.07.2017 modelChanged macht genau was?
+    private void fireModelChanged() {
+        for (ModelChangeListener listener : listenerList) {
+            listener.modelChanged();
+        }
+    }
+
     // ============================  Inner Classes  ==========================79
     // ============================  End of class  ===========================79
 }

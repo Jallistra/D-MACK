@@ -51,6 +51,11 @@ public class Tag {
         return tagName.toLowerCase().hashCode();
     }
 
+    @Override
+    public String toString() {
+        return tagName;
+    }
+
     // =================  protected/package local  Methods ===================79
     // ===========================  private  Methods  ========================79
     // ============================  Inner Classes  ==========================79

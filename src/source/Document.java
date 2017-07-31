@@ -3,6 +3,8 @@ package source;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -14,7 +16,7 @@ public class Document {
     // =============================  Variables  =============================79
     private String docName;
     private String docPath;
-    private List<Tag> assignedTagList;
+    private List<Tag> assignedTagList = new ArrayList();
     private Date createdDate;
     private Date updatedDate;
 
@@ -24,9 +26,12 @@ public class Document {
 
     }
 
-    public Document(String name, String path) {
+    public Document(String name, String path, List<Tag> tags) {
         this.docName = name;
         this.docPath = path;
+        assignedTagList.addAll(tags);
+        createdDate = Date.now();
+        updatedDate = Date.now();
     }
 
     // ===========================  public  Methods  =========================79
@@ -36,7 +41,6 @@ public class Document {
     public void openDoc() throws IOException {
         if(Desktop.isDesktopSupported()) {
             Desktop desk = Desktop.getDesktop();
-
             desk.open(new File(docPath));
         }
 
@@ -50,8 +54,12 @@ public class Document {
         return docPath;
     }
 
+    public void removeTag(Tag tag) {
+        assignedTagList.remove(tag);
+    }
+
     public List<Tag> getAssignedTagList() {
-        return assignedTagList;
+        return Collections.unmodifiableList(assignedTagList);
     }
 
     public Date getCreatedDate() {
@@ -68,10 +76,6 @@ public class Document {
 
     public void setDocPath(String docPath) {
         this.docPath = docPath;
-    }
-
-    public void setAssignedTagList(List<Tag> assignedTagList) {
-        this.assignedTagList = assignedTagList;
     }
 
     public void setCreatedDate(Date createdDate) {

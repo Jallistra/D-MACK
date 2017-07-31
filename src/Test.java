@@ -2,8 +2,6 @@ import source.Control;
 import source.Document;
 import source.Tag;
 
-import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -43,19 +41,17 @@ public class Test {
         Control.getInstance().getDocList().add(testC);
         Control.getInstance().getDocList().add(testD);
         Control.getInstance().getDocList().add(testE);
-        Control.getInstance().searchDoc("A");
 
-        Control.getInstance().getTagSet().add(testTag1);
-        Control.getInstance().getTagSet().add(testTag2);
-        Control.getInstance().getTagSet().add(testTag3);
-        Control.getInstance().getTagSet().add(testTag4);
+        Control.getInstance().getTagList().add(testTag1);
+        Control.getInstance().getTagList().add(testTag2);
+        Control.getInstance().getTagList().add(testTag3);
+        Control.getInstance().getTagList().add(testTag4);
         System.out.println();
 
-        Control.getInstance().searchDoc("e");
 
         System.out.println();
 
-        Control.getInstance().outputContainedDoc(testTag1) ;
+        Control.getInstance().outputContainsDoc(new Tag("haha"));
 
 
         Scanner s = new Scanner(System.in);
