@@ -1,42 +1,34 @@
-package menu;
+package GUI.model;
 
-/**
- * Created by cceti on 12.05.2017.
- */
-public class MenuWindow {
+import source.Tag;
 
+import javax.swing.table.AbstractTableModel;
+import java.util.List;
+
+public abstract class AbstractFilteredTableModel extends AbstractTableModel {
     // =========================== Class Variables ===========================79
     // =============================  Variables  =============================79
 
-    String titel;
-    String[] auswahl;
+    private boolean isFiltered = false;
 
     // ============================  Constructors  ===========================79
-
-    public MenuWindow(String titel, String[] auswahl) {
-        this.titel = titel;
-        this.auswahl = auswahl;
-    }
-
     // ===========================  public  Methods  =========================79
 
-    public String getTitel() {
-        return titel;
+    public abstract void updateFilteredList(String text);
+
+    public abstract void updateFilteredList(List<Tag> tags);
+
+    public void setFiltered(boolean isFiltered) {
+        this.isFiltered = isFiltered;
     }
 
-    public void setTitel(String titel) {
-        this.titel = titel;
-    }
-
-    public String[] getAuswahl() {
-        return auswahl;
-    }
-
-    public void setAuswahl(String[] auswahl) {
-        this.auswahl = auswahl;
+    boolean isFiltered() {
+        return isFiltered;
     }
 
     // =================  protected/package local  Methods ===================79
+
+
     // ===========================  private  Methods  ========================79
     // ============================  Inner Classes  ==========================79
     // ============================  End of class  ===========================79
