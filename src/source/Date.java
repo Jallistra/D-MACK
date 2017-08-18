@@ -1,5 +1,6 @@
 package source;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -7,9 +8,18 @@ import java.util.GregorianCalendar;
  * Created by cceti on 30.05.2017.
  */
 
-public class Date implements Comparable<Date> {
+public class Date implements Comparable<Date>, Serializable {
 
     // =========================== Class Variables ===========================79
+
+    public static Date now() {
+        Date date = new Date();
+        date.init();
+        return date;
+    }
+
+    public static final long SerialVersionUID = 111289L;
+
     // =============================  Variables  =============================79
 
     private int dDay;
@@ -36,11 +46,10 @@ public class Date implements Comparable<Date> {
     // ===========================  public  Methods  =========================79
 
     public String print() {
-        String output;
         if(dDay >31 || dMonth >12)
-            return output = "Ungültige Eingabe!";
+            return "Ungültige Eingabe!";
         else
-            return output = dHour + ":" + dMinute + ":" + dSecond + "  " + dDay + "." + dMonth + "." + dYear;
+            return toString();
     }
 
     public void init() {
@@ -51,7 +60,6 @@ public class Date implements Comparable<Date> {
         dHour = cal.get(Calendar.HOUR_OF_DAY);
         dMinute = cal.get(Calendar.MINUTE);
         dSecond = cal.get(Calendar.SECOND);
-        //System.out.println(dDay + "." + dMonth + "." + dYear);
     }
 
     @Override

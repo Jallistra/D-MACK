@@ -1,74 +1,107 @@
 package source;
 
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by cceti on 30.05.2017.
  */
-public class Document {
-
+public class Document implements Comparable<Document>, Serializable {
     // =========================== Class Variables ===========================79
+
+    public static final long SerialVersionUID = 51190L;
+
     // =============================  Variables  =============================79
-    private String docName;
-    private String docPath;
-    private ArrayList<Tag> assignedTagList;
+
+    private String documentName;
+    private String documentPath;
+    private List<Tag> assignedTagList = new ArrayList<>();
     private Date createdDate;
-    private Date updatedDate;
+    private Date modifiedDate;
 
     // ============================  Constructors  ===========================79
-    public Document() {
-    }
 
-    //todo Ist dieser Konstruktor nötig?
-    public Document(ArrayList<Tag> tagList) {
-        this.assignedTagList = tagList;
+    Document(String name, String path, List<Tag> tags) {
+        this.documentName = name;
+        this.documentPath = path;
+        assignedTagList.addAll(tags);
+        createdDate = Date.now();
+        modifiedDate = Date.now();
     }
-
 
     // ===========================  public  Methods  =========================79
 
-    public void openDoc() {
+    public void openDoc(JPanel parent)  {
+        if(Desktop.isDesktopSupported()) {
+            Desktop desk = Desktop.getDesktop();
+            try {
+                desk.open(new File(documentPath));
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(parent, "Das Dokument konnte nicht geöffnet werden!", "Fehler", JOptionPane.ERROR_MESSAGE);
 
+            }
+        }
     }
 
-    public String getDocName() {
-        return docName;
+    public String getDocumentName() {
+        return documentName;
     }
 
-    public void setDocName(String docName) {
-        this.docName = docName;
+    public String getDocumentPath() {
+        return documentPath;
     }
 
-    public String getDocPath() {
-        return docPath;
+    public void removeTag(Tag tag) {
+        assignedTagList.remove(tag);
     }
 
-    public void setDocPath(String docPath) {
-        this.docPath = docPath;
-    }
-
-    public ArrayList<Tag> getAssignedTagList() {
-        return assignedTagList;
-    }
-
-    public void setAssignedTagList(ArrayList<Tag> assignedTagList) {
-        this.assignedTagList = assignedTagList;
+    public List<Tag> getAssignedTagList() {
+        return Collections.unmodifiableList(assignedTagList);
     }
 
     public Date getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
+    public Date getModifiedDate() {
+        return modifiedDate;
     }
 
-    public Date getUpdatedDate() {
-        return updatedDate;
+    void setDocumentName(String documentName) {
+        if (this.documentName.equals(documentName)) {
+            return;
+        }
+        this.documentName = documentName;
+        modifiedDate = Date.now();
     }
 
-    public void setUpdatedDate(Date updatedDate) {
-        this.updatedDate = updatedDate;
+    void setDocumentPath(String documentPath) {
+        if (this.documentPath.equals(documentPath)) {
+            return;
+        }
+        this.documentPath = documentPath;
+        modifiedDate = Date.now();
+    }
+
+
+    void replaceAssignedTagList(List<Tag> assignedTagList) {
+        if (this.assignedTagList.equals(assignedTagList)) {
+            return;
+        }
+        this.assignedTagList.clear();
+        this.assignedTagList.addAll(assignedTagList);
+        modifiedDate = Date.now();
+    }
+
+    @Override
+    public int compareTo(Document o) {
+        return this.getDocumentName().compareTo(o.documentName);
     }
 
     // =================  protected/package local  Methods ===================79

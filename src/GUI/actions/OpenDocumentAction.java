@@ -1,29 +1,35 @@
-package source;
+package GUI.actions;
 
-import java.util.HashSet;
+;
 
-/**
- * Created by cceti on 14.06.2017.
- */
-public class HashSetTest {
+import source.Data;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+
+public class OpenDocumentAction extends AbstractAction {
 
     // =========================== Class Variables ===========================79
     // =============================  Variables  =============================79
-    // ============================  Constructors  ===========================79
-    // ===========================  public  Methods  =========================79
-    public static void main(String args[]) {
-        // create a hash set
-        HashSet hs = new HashSet();
 
-        // add elements to the hash set
-       // hs.add("B");
-        hs.add("A");
-        hs.add("D");
-        hs.add("E");
-        hs.add("C");
-        hs.add("F");
-        System.out.println(hs);
+    private JPanel parent;
+    private JTable table;
+
+    // ============================  Constructors  ===========================79
+
+    public OpenDocumentAction(JPanel parent, JTable table) {
+        this.parent = parent;
+        this.table = table;
     }
+    // ===========================  public  Methods  =========================79
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        int selected = table.getSelectionModel().getMinSelectionIndex();
+        selected = table.convertRowIndexToModel(selected);
+        Data.getInstance().getDocList().get(selected).openDoc(parent);
+    }
+
 
     // =================  protected/package local  Methods ===================79
     // ===========================  private  Methods  ========================79
