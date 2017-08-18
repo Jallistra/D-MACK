@@ -1,41 +1,21 @@
-package menu;
+package menu.MenuFields.Windows;
+
+import menu.MenuWindow;
 
 /**
- * Created by cceti on 12.05.2017.
+ * Created by cceti on 06.06.2017.
  */
-public class MenuWindow {
+public class MainMenu extends MenuWindow {
 
     // =========================== Class Variables ===========================79
     // =============================  Variables  =============================79
-
-    String titel;
-    String[] auswahl;
-
     // ============================  Constructors  ===========================79
 
-    public MenuWindow(String titel, String[] auswahl) {
-        this.titel = titel;
-        this.auswahl = auswahl;
+    public MainMenu(String titel, String[] auswahl) {
+        super(titel, auswahl);
     }
 
     // ===========================  public  Methods  =========================79
-
-    public String getTitel() {
-        return titel;
-    }
-
-    public void setTitel(String titel) {
-        this.titel = titel;
-    }
-
-    public String[] getAuswahl() {
-        return auswahl;
-    }
-
-    public void setAuswahl(String[] auswahl) {
-        this.auswahl = auswahl;
-    }
-
     // =================  protected/package local  Methods ===================79
     // ===========================  private  Methods  ========================79
     // ============================  Inner Classes  ==========================79
